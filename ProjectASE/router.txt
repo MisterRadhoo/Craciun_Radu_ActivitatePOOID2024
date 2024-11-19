@@ -1,0 +1,4 @@
+Wired
+12
+150
+GigaByte

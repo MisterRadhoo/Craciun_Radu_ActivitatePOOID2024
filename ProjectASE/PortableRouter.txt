@@ -1,0 +1,4 @@
+Wireless
+22
+2500
+RX-R+
