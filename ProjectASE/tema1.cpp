@@ -48,7 +48,7 @@ public:
     }
     ~Autobuz()
     {
-        if (this->producator != NULL)
+        if (this->producator != nullptr)
         {
             delete[] producator;
             cout << "Destructor chemat !!! \n";
