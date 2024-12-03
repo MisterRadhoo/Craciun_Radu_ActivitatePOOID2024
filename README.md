@@ -7,4 +7,5 @@ Codul Sursa:
 - fisierul test1.cpp contine un exemplu de clasa facand referire la al-2-lea seminar din curs POO.
 - fisierul test2.cpp contine un exemplu de clasa Point si DistanceCalculator, calculeaza distanta intre doua puncte.
 - fisierul Tasks.cpp contine task-urile, fazele 1-7 de la proiect POOID.
-- fisierul tema1.cpp contine tema1-clasa Autobuz. 
+- fisierul tema1.cpp contine tema1-clasa Autobuz.
+- fisierele work.cpp contine un exemplu clasa Farmacie, work2.cpp (clasa Laptop + Inheritance, polymorphism), work3.cpp (clasa Portofel).
