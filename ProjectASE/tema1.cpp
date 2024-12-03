@@ -56,7 +56,7 @@ public:
     }
     Autobuz &operator=(const Autobuz &atb)
     {
-        if (this != &atb) // evita auto-atribuirea;
+        if (this != &atb) // evitam auto-atribuirea;
         {
             this->capacitate = atb.capacitate;
             this->nrPersoaneImbarcate = atb.nrPersoaneImbarcate;
