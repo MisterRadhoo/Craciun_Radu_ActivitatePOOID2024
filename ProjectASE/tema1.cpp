@@ -48,7 +48,7 @@ public:
     }
     ~Autobuz()
     {
-        if (this->producator != NULL)
+        if (this->producator != nullptr)
         {
             delete[] producator;
             cout << "Destructor chemat !!! \n";
@@ -141,8 +141,8 @@ int main()
     cout << autobuz3 << endl;
     cout << autobuz4 << endl;
     cout << endl;
-    cout << "Constructorul de copiere chemat !!! \n"
-         << autobuz5 << endl;
+    cout << "Constructorul de copiere chemat !!! \n";
+    cout << autobuz5 << endl;
     autobuz5.setCapacitate(65);
     autobuz5.setPersoaneImbarcate(53);
     cout << "Capacitatea autobuzului este de: ->> " << autobuz5.getCapacitate() << " locuri pe scaune" << endl;
