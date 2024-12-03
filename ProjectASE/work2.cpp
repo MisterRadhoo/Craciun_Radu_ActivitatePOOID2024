@@ -91,7 +91,7 @@ public:
         if (index >= 0 && index < this->nrTaste)
             return this->nrApasariTasta[index];
     }
-    // Overloading (+=), adauga si atribuie, modifica obiectul initial prin referinta, returnad *this ( obiectul curent);
+    // Overloading (+=), adauga si atribuie, modifica obiectul initial prin referinta, return *this ( obiectul curent);
     Laptop &operator+=(int value)
     {
         this->RAM += value;
@@ -140,6 +140,15 @@ public:
     {
         return this->id;
     }
+    int *getNrApasari() const
+    {
+        int *temp = new int[this->nrTaste];
+        for (int i = 0; i < this->nrTaste; i++)
+        {
+            temp[i] = this->nrApasariTasta[i];
+        }
+        return temp;
+    }
 
     friend class Programator;
     friend ostream &operator<<(ostream &os, const Laptop &l1)
@@ -156,7 +165,20 @@ public:
         }
         return os;
     }
-    ~Laptop()
+    virtual void display() const
+    {
+        cout << "Laptop-ID: -->> " << this->id
+             << " ; Laptop RAM: -->> " << this->RAM
+             << " ; Laptop tip CPU: -->> " << this->tipCPU
+             << " ; Laptop rezolutie ecran : -->> " << this->rezolutieEcran << " pixeli."
+             << " ; Latop are camera web: -->> " << (this->cameraWeb ? "DA" : "NU")
+             << " ; Laptop are numar taste: -->> " << this->nrTaste << endl;
+        for (int i = 0; i < this->nrTaste; i++)
+        {
+            cout << " ; Numar apasari taste: " << this->nrApasariTasta[i] << endl;
+        }
+    }
+    virtual ~Laptop()
     {
         if (this->nrApasariTasta != nullptr)
         {
@@ -169,8 +191,84 @@ public:
 // class Componente, clasa derivata din clasa Laptop(de baza), mostenire public (acces);
 class Componente : public Laptop
 {
+
 private:
+    string placaDeBaza;
+    string placaVideo;
+    int nrSSD;
+    int *capacitate;
+
 public:
+    // constructor implicit;
+    Componente() : Laptop(), placaDeBaza(""), placaVideo(""), nrSSD(0)
+    {
+        this->capacitate = nullptr;
+    }
+    // constructor cu parametrii;
+    Componente(int RAM, const string &tipCPU, float rez, bool cameraWeb, int nrTaste, int *nrApasari, const string &placaDeBaza, const string &placaVideo, int nrSSD, int *capacitate) : Laptop(RAM, tipCPU, rez, true, nrTaste, nrApasari), placaDeBaza(placaDeBaza), placaVideo(placaVideo), nrSSD(nrSSD)
+    {
+        this->capacitate = new int[nrSSD];
+        for (int i = 0; i < nrSSD; i++)
+        {
+            this->capacitate[i] = capacitate[i];
+        }
+    }
+    // constructor de copiere;;
+    Componente(const Componente &comp) : Laptop(comp), placaDeBaza(comp.placaDeBaza), placaVideo(comp.placaVideo), nrSSD(comp.nrSSD)
+    {
+        this->capacitate = new int[comp.nrSSD];
+        for (int i = 0; i < comp.nrSSD; i++)
+        {
+            this->capacitate[i] = comp.capacitate[i];
+        }
+    }
+    // operator de atribuire;
+    Componente &operator=(const Componente &c)
+
+    {
+        if (this != &c)
+        {
+            (Laptop) *this = (Laptop)c;
+            delete[] this->capacitate;
+            this->placaDeBaza = c.placaDeBaza;
+            this->placaVideo = c.placaVideo;
+            this->nrSSD = c.nrSSD;
+            if (this->capacitate != nullptr)
+            {
+
+                this->capacitate = new int[c.nrSSD];
+                for (int i = 0; i < c.nrSSD; i++)
+                {
+                    this->capacitate[i] = c.capacitate[i];
+                }
+            }
+        }
+        return *this;
+    }
+    string getPlacaVideo() const
+    {
+        return this->placaVideo;
+    }
+    void setPlacaVideo(const string &pV)
+    {
+        this->placaVideo = pV;
+    }
+    ~Componente()
+    {
+        delete[] this->capacitate;
+        cout << "Destructor derivat chemat: \n";
+    }
+    void display() const override
+    {
+        Laptop::display();
+        cout << " Placa de baza: " << this->placaDeBaza << endl;
+        cout << "; Placa video: " << this->placaVideo << endl;
+        cout << "; Numar SSD-uri: " << this->nrSSD << endl;
+        for (int i = 0; i < this->nrSSD; i++)
+        {
+            cout << this->capacitate[i] << endl;
+        }
+    }
 };
 
 // class Programator;
@@ -221,6 +319,44 @@ int main()
     Programator programator1(laptop3, "Radu");
     programator1.display();
     cout << (programator1.poateIntraInConferintaVideo() ? "Poate sa intre cu camera video " : "NU") << endl;
+    cout << endl;
 
+    Componente c;
+    c.display();
+    cout << endl;
+    int *param = new int[3]{1, 2, 3};
+    // upcasting;
+    Laptop *laptop500 = new Componente(32, "Intel i7", 79.99, true, 3, param, "Asus Prime", "Nvidia GTX 4050", 2, new int[2]{256, 512});
+    *laptop500 = *laptop500 + 2;
+    laptop500->setTipCPU("Intel Killin i9");
+    laptop500->display();
+    cout << endl;
+    // eliberare memorie alocata.
+    int *apasari = laptop1.getNrApasari();
+    for (int i = 0; i < 5; i++)
+    {
+        cout << apasari[i] << endl;
+    }
+    int *taste = new int[3]{100, 200, 300};
+    cout << endl;
+    Componente c3(16, "AMD", 88.99, false, 3, taste, "AcerRocket", "Nvidia 5060GTX", 3, new int[3]{128, 256, 512});
+    Componente c4(c3); // constructor de copiere;
+    c3.setRezolutie(99.99);
+    cout << "Rezolutie: " << c3.getRezolutie() << endl;
+    c3.setPlacaVideo("Nvidia GTX 5588x");
+    c3.display();
+    Componente c5(32, "Intel I8", 84.86, false, 2, new int[2]{10, 20}, "Voodoo 3D", "Nvidia GTS 8800", 1, new int[1]{512});
+    Componente c6;
+    c6 = c5;
+    c5.setCameraWeb(true);
+    c5.setRezolutie(5.5);
+    c5 += 16;
+    c5.setPlacaVideo("Nvidia GTSX 8900x");
+    c5.display();
+    cout << endl;
+    delete[] apasari;
+    delete[] param;
+    delete[] laptop500;
+    delete[] taste;
     return 0;
 }
