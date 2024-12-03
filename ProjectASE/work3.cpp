@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-
+// Class Portofel;
 class Portofel
 {
 private:

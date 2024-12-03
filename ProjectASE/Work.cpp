@@ -13,7 +13,7 @@ private:
     float *preturiMedicamente;
 
 public:
-    // constructor fara parametrii;
+    // constructor fara parametrii;;
     Farmacie() : CODUnic(idCODUnic++), adresa(""), nrMedicamente(0)
     {
         this->preturiMedicamente = nullptr;

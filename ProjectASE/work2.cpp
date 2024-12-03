@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-class Programator; // forward declaration;
+class Programator; // forward declaration;;
 
 class Laptop
 {
