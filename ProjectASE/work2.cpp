@@ -18,7 +18,7 @@ private:
     int *nrApasariTasta;
 
 public:
-    // constructor fara parametrii;
+    // constructor fara parametrii;//implicit
     Laptop() : id(nrLaptopuri++), RAM(0), tipCPU(""), rezolutieEcran(0.0), cameraWeb(false), nrTaste(0)
     {
         this->nrApasariTasta = nullptr;
@@ -37,8 +37,8 @@ public:
     Laptop(const Laptop &l)
         : id(nrLaptopuri++), RAM(l.RAM), tipCPU(l.tipCPU), rezolutieEcran(l.rezolutieEcran), cameraWeb(l.cameraWeb), nrTaste(l.nrTaste)
     {
-        this->nrApasariTasta = new int[nrTaste];
-        for (int i = 0; i < nrTaste; i++)
+        this->nrApasariTasta = new int[l.nrTaste];
+        for (int i = 0; i < l.nrTaste; i++)
         {
             this->nrApasariTasta[i] = l.nrApasariTasta[i];
         }
@@ -53,13 +53,17 @@ public:
             this->rezolutieEcran = laptop.rezolutieEcran;
             this->cameraWeb = laptop.cameraWeb;
             this->nrTaste = laptop.nrTaste;
-            if (this->nrApasariTasta != nullptr)
+            if (laptop.nrApasariTasta != nullptr)
             {
                 this->nrApasariTasta = new int[laptop.nrTaste];
                 for (int i = 0; i < laptop.nrTaste; i++)
                 {
                     this->nrApasariTasta[i] = laptop.nrApasariTasta[i];
                 }
+            }
+            else
+            {
+                this->nrApasariTasta = nullptr;
             }
         }
         return *this;
@@ -96,6 +100,27 @@ public:
     {
         this->RAM += value;
         return *this;
+    }
+    // Operator de cast
+    operator int()
+    {
+        return RAM;
+    }
+    // Operator (!) negare;
+    Laptop &operator!()
+    {
+        this->cameraWeb = !this->cameraWeb;
+        return *this;
+    }
+    // Operator ();//calculare numar total de apasari;
+    int operator()()
+    {
+        int suma = 0;
+        for (int i = 0; i < this->nrTaste; i++)
+        {
+            suma += this->nrApasariTasta[i];
+        }
+        return suma;
     }
     int getRAM() const
     {
@@ -253,6 +278,44 @@ public:
     {
         this->placaVideo = pV;
     }
+    int getNrSSD() const
+    {
+        return this->nrSSD;
+    }
+    int setNrSSD(int numarSSD)
+    {
+        if (numarSSD > 0)
+        {
+            this->nrSSD = numarSSD;
+        }
+        else
+        {
+            throw "Valoare Negativa";
+        }
+    }
+    int *getCapacitate() const
+    {
+        int *vectorCapacitate = new int[this->nrSSD];
+        for (int i = 0; i < this->nrSSD; i++)
+        {
+            vectorCapacitate[i] = this->capacitate[i];
+        }
+        return vectorCapacitate;
+    }
+    int setCapacitate(int *noulVectorCapacitate, int nouaDimensiune)
+    {
+        setNrSSD(nouaDimensiune);
+        if (this->capacitate != nullptr)
+        {
+            delete[] this->capacitate;
+        }
+        this->capacitate = new int[nouaDimensiune];
+        for (int i = 0; i < nouaDimensiune; i++)
+        {
+            this->capacitate[i] = noulVectorCapacitate[i];
+        }
+        delete[] noulVectorCapacitate;
+    }
     ~Componente()
     {
         delete[] this->capacitate;
@@ -266,7 +329,7 @@ public:
         cout << "; Numar SSD-uri: " << this->nrSSD << endl;
         for (int i = 0; i < this->nrSSD; i++)
         {
-            cout << this->capacitate[i] << endl;
+            cout << this->capacitate[i] << " GB" << endl;
         }
     }
 };
@@ -304,59 +367,70 @@ int main()
 
 {
 
-    Programator programator;
+    // Programator programator;
     Laptop laptop;
     Laptop laptop1(16, "Intel", 77.88, true, 4, new int[4]{12, 14, 13, 27});
     cout << laptop1 << endl;
     cout << endl;
-    Laptop laptop2(laptop1); // constructor copy called;
-    cout << laptop2 << endl;
-    Laptop laptop3(32, "INTEL i7", 88.99, true, 5, new int[5]{44, 55, 66, 77, 88});
-    laptop3.setMaxRAM(48);
-    laptop1 = laptop3 + 5.5f;
-    laptop1 = laptop3 + 8; // overloading operator (+);
+    !laptop1; // overloading operator !;
+    cout << "Camera web activa ? " << laptop1.getCameraWeb() << endl;
+    cout << "Suma totala de apasari a tasturii: -->> " << laptop1() << endl;
+    laptop1 = laptop1 + 16;
+    laptop1++;
     cout << laptop1 << endl;
-    Programator programator1(laptop3, "Radu");
-    programator1.display();
-    cout << (programator1.poateIntraInConferintaVideo() ? "Poate sa intre cu camera video " : "NU") << endl;
-    cout << endl;
+    // Laptop laptop2(laptop1); // constructor copy called;
+    // cout << laptop2 << endl;
+    // Laptop laptop3(32, "INTEL i7", 88.99, true, 5, new int[5]{44, 55, 66, 77, 88});
+    // laptop3.setMaxRAM(48);
+    // laptop1 = laptop3 + 5.5f;
+    // laptop1 = laptop3 + 8; // overloading operator (+);
+    // cout << laptop1 << endl;
+    // Programator programator1(laptop3, "Radu");
+    // programator1.display();
+    // cout << (programator1.poateIntraInConferintaVideo() ? "Poate sa intre cu camera video " : "NU") << endl;
+    // cout << endl;
 
-    Componente c;
-    c.display();
+    Componente comp(16, "Intel_I5", 119.99, true, 4, new int[4]{10, 11, 12, 13}, "ASUS Rock", "GTX 4050Rx", 2, new int[2]{256, 512});
+    comp.setNrSSD(3);
+    comp.setCapacitate(new int[3]{512, 1024, 2048}, 3);
+    cout << "Nr: SSD-uri Componente: " << comp.getNrSSD() << endl;
     cout << endl;
-    int *param = new int[3]{1, 2, 3};
+    int *cap = comp.getCapacitate();
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "Update SSD-uri: " << cap[i] << " GB" << endl;
+    }
+    delete[] cap;
+    cout << endl;
+    comp.display();
+    // Componente comp1(comp);
+    // comp1.display();
+    // // operator de atribuire -> clasa derivata;
+    // Componente comp2 = comp;
+    // comp = comp2;
+    // comp2.display();
+    // cout << endl;
+
     // upcasting;
-    Laptop *laptop500 = new Componente(32, "Intel i7", 79.99, true, 3, param, "Asus Prime", "Nvidia GTX 4050", 2, new int[2]{256, 512});
+    Laptop *laptop500 = new Componente(32, "Intel i7", 79.99, true, 3, new int[3]{4, 5, 7}, "Asus Prime", "Nvidia GTX 4050", 2, new int[2]{256, 512});
     *laptop500 = *laptop500 + 2;
     laptop500->setTipCPU("Intel Killin i9");
     laptop500->display();
     cout << endl;
+    cout << "Valorea la index 2 este: -->>> " << (*laptop500)[2] << endl; // overloadin operator[];
+    int memorieRAMImplicit = *laptop500;
+    int memorieRAMExplicit = int(*laptop500);
+    cout << "Memorie RAM implicit: " << memorieRAMImplicit << endl;
+    cout << "Memorie RAM explicit: " << memorieRAMExplicit << endl;
+
     // eliberare memorie alocata.
-    int *apasari = laptop1.getNrApasari();
-    for (int i = 0; i < 5; i++)
-    {
-        cout << apasari[i] << endl;
-    }
-    int *taste = new int[3]{100, 200, 300};
-    cout << endl;
-    Componente c3(16, "AMD", 88.99, false, 3, taste, "AcerRocket", "Nvidia 5060GTX", 3, new int[3]{128, 256, 512});
-    Componente c4(c3); // constructor de copiere;
-    c3.setRezolutie(99.99);
-    cout << "Rezolutie: " << c3.getRezolutie() << endl;
-    c3.setPlacaVideo("Nvidia GTX 5588x");
-    c3.display();
-    Componente c5(32, "Intel I8", 84.86, false, 2, new int[2]{10, 20}, "Voodoo 3D", "Nvidia GTS 8800", 1, new int[1]{512});
-    Componente c6;
-    c6 = c5;
-    c5.setCameraWeb(true);
-    c5.setRezolutie(5.5);
-    c5 += 16;
-    c5.setPlacaVideo("Nvidia GTSX 8900x");
-    c5.display();
-    cout << endl;
-    delete[] apasari;
-    delete[] param;
-    delete[] laptop500;
-    delete[] taste;
+    // int *apasari = laptop1.getNrApasari();
+    // for (int i = 0; i < 5; i++)
+    // {
+    //     cout << apasari[i] << endl;
+    // }
+
+    delete laptop500;
+    // delete[] apasari;
     return 0;
 }

@@ -594,8 +594,7 @@ public:
     }
 
     // friend function;
-    friend void
-    improveModel(MachineLearningModel &ml, float crestePrecizie);                                                  // Faza 2;
+    friend void improveModel(MachineLearningModel &ml, float crestePrecizie);                                      // Faza 2;
     friend MachineLearningModel combinaModele(const MachineLearningModel &mlm1, const MachineLearningModel &mlm2); // Faza 3;
 };
 
